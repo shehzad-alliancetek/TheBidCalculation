@@ -1,0 +1,115 @@
+﻿@model BidCalculator.Models.VehicleCosts
+
+@{
+    ViewData["Title"] = "Home";
+    var culture = new System.Globalization.CultureInfo("en-US");
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" class="row g-3">
+            <div class="form-group">
+                <label for="vehicleBasePrice">Vehicle Base Price</label>
+                <input type="number" class="form-control" id="VehicleBasePrice" name="VehicleBasePrice" placeholder="Enter vehicle's base price" required="required">
+            </div>
+            <div class="form-group">
+                <label for="vehicleType">Vehicle Type</label>
+                <select class="form-select" id="VehicleType" name="VehicleType">
+                    <option value="Common">Common</option>
+                    <option value="Luxury">Luxury</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Calculate</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        @if (Model != null)
+        {
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Bid detail @(!string.IsNullOrWhiteSpace(Model.VehicleType) ? $"for {Model.VehicleType} vehicle" : string.Empty)</th>
+                        <th class="text-end">Amount (in $)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Base Price
+                        </td>
+                        <td class="text-end">
+                            @Model.VehicleBasePrice.ToString("N", culture)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Basic User Fee
+                        </td>
+                        <td class="text-end">
+                            @Model.BasicUserFee.ToString("N", culture)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Seller's Special Fee
+                        </td>
+                        <td class="text-end">
+                            @Model.SellersSpecialFee.ToString("N", culture)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Association Added Cost
+                        </td>
+                        <td class="text-end">
+                            @Model.AssociationAddedCost.ToString("N", culture)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Fixed Storage Fee
+                        </td>
+                        <td class="text-end">
+                            @Model.FixedStoragFee.ToString("N", culture)
+                        </td>
+                    </tr>
+                    <tr class="table-secondary">
+                        <td class="fw-bold">
+                            Total Cost
+                        </td>
+                        <td class="text-end fw-bold">
+                            $ @Model.TotalCost.ToString("N", culture)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<div class="clear">&nbsp;</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true
+            }
+
+            var errorMessage = '@(ViewBag.ErrorMessage)';
+            var message = '@(ViewBag.Message)';
+
+            if (errorMessage != null && errorMessage != '') {
+                toastr.error(errorMessage);
+            }
+
+            if (message != null && message != '') {
+                toastr.success(message);
+            }
+        });
+    </script>
+}
